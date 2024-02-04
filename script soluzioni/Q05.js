@@ -3,15 +3,12 @@ const process = require('process');
 const { argv } = process;
 const [, , fileData] = argv;
 
-let istruzioni = fs.readFileSync(`./${fileData}.txt`);
-let movimenti = String(istruzioni).split('\n')
+// node "script soluzioni/Q05.js" 05
 
-let puliti = []
-movimenti.forEach(element => {
-    puliti.push(element.replace('\r', ''))
-});
+let istruzioni = fs.readFileSync(`./testo domande/${fileData}.txt`, 'utf-8');
+let movimenti = istruzioni.split('\n')
 
-//console.log(puliti)
+let puliti = movimenti.map(element => element.replace('\r', ''));
 
 let naughty = []
 let nice = []
@@ -33,13 +30,11 @@ const threeVowels = (str) => {
       str[i] === 'e' ||
       str[i] === 'i' ||
       str[i] === 'o' ||
-      str[i] ==='u'
-    ) {
+      str[i] === 'u'
+    )
       k++
-    }
-    if (k > 2) {
+    if (k > 2)
       return true
-    }
   }
   return false
 }
@@ -50,9 +45,8 @@ const targetSequence = (str) => {
     str.indexOf('cd') !== -1 ||
     str.indexOf('pq') !== -1 ||
     str.indexOf('xy') !== -1
-  ) {
+  )
     return false
-  }
   return true
 }
   
@@ -68,10 +62,11 @@ const filtro01 = (str) => {
   naughty.push(str);
 }
 
-//puliti.forEach(filtro01)
+puliti.forEach(filtro01)
+console.log(`\nApplicando i criteri della prima parte del quesito si hanno:\n- ${naughty.length} elementi cattivi\n- ${nice.length} elementi buoni`)
 
-//console.log(naughty.length)
-//console.log(nice.length)
+naughty.length = 0;
+nice.length = 0;
 
 const doublePairs = (str) => {
   for (let i = 0; i < str.length - 1; i++) {
@@ -80,18 +75,6 @@ const doublePairs = (str) => {
     }
   }
   return false
-}
-
-const doublePairsAI = (str) => {
-  const pairs = new Set();
-  for (let i = 0; i < str.length - 1; i++) {
-    const pair = str.slice(i, i + 2);
-    if (pairs.has(pair) && str[i] !== str[i + 2]) {
-      return true;
-    }
-    pairs.add(pair);
-  }
-  return false;
 }
 
 const sandwich = (str) => {
@@ -115,6 +98,4 @@ const filtro02 = (str) => {
 }
 
 puliti.forEach(filtro02)
-
-console.log(naughty.length)
-console.log(nice.length)
+console.log(`\nApplicando i criteri della seconda parte del quesito si hanno:\n- ${naughty.length} elementi cattivi\n- ${nice.length} elementi buoni\n`)
