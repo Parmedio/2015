@@ -3,8 +3,8 @@ const process = require('process');
 const { argv } = process;
 const [, , fileData] = argv;
 
-let quesitoDirectory = `./testo domande/${fileData}.txt`;
-let istruzioni = fs.readFileSync(quesitoDirectory);
+let quesitonDirectory = `./testo domande/${fileData}.txt`;
+let istruzioni = fs.readFileSync(quesitonDirectory);
 
 const move = String(istruzioni)
 const a = move.length
@@ -33,7 +33,7 @@ for (let i = 0; i <= a; ++i) {
 // RISPOSTA ANDREI
 
 function andreiQ02() {
-  fs.readFile(quesitoDirectory, (err, data) => {
+  fs.readFile(quesitonDirectory, (err, data) => {
     console.time('tempo svolgimento Q2');
     if (err) {
         console.log('qualcosa è andato storto: ' + err);

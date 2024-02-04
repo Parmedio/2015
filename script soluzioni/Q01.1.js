@@ -9,9 +9,9 @@ const process = require('process');
 const { argv } = process;
 const [, , fileData] = argv;
 
-let quesitoDirectory = `./testo domande/${fileData}.txt`;
+let quesitonDirectory = `./testo domande/${fileData}.txt`;
 
-let istruzioni = fs.readFileSync(quesitoDirectory);
+let istruzioni = fs.readFileSync(quesitonDirectory);
 
 const mosse = String(istruzioni).split('');
 const a = mosse.length;
@@ -54,7 +54,7 @@ console.log('differenza ' + (countOpen - countClose))
 // RISPOSTA ANDREI
 
 function andreiQ01() {
-  fs.readFile(quesitoDirectory, (err, data) => {
+  fs.readFile(quesitonDirectory, (err, data) => {
     console.time('tempo svolgimento Q1');
     if (err) {
         console.log('qualcosa è andato storto: ' + err);

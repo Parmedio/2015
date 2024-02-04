@@ -3,7 +3,7 @@ const process = require('process');
 const { argv } = process;
 const [, , fileData] = argv;
 
-let quesitoDirectory = `./testo domande/${fileData}.txt`;
+let quesitonDirectory = `./testo domande/${fileData}.txt`;
 
 const formattaDatiPerCalcoli = (StringheDiMisurePacchi) => {
   let pacchi = StringheDiMisurePacchi.split('\n');
@@ -33,7 +33,7 @@ const calcoliPerNastro = (listaDimensioniOrdinataASC) => {
 }
 
 function  DUEdue(metodoCalcolo, messaggio = null) {
-  fs.readFile(quesitoDirectory, 'utf-8', (err, data) => {
+  fs.readFile(quesitonDirectory, 'utf-8', (err, data) => {
     console.time('timer');
     if (err) {
       console.log("qualcosa è andato storto in  DUEdue: " + err);
