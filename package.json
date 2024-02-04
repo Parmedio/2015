@@ -1,5 +1,6 @@
 {
   "name": "eventcode2015",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "20 script.js",
