@@ -10,6 +10,14 @@ let listaIstruzioni = separaIstruzioni(fileData);
 
 let listaStrutturata = creaListaStrutturata(listaIstruzioni);
 
+console.log('Ho cominciato.');
+
+processaIstruzioni(listaStrutturata);
+
+console.log('Ho finito.');
+
+listaStrutturata.filter(x => x.outputExpression.outputWireName == 'a').forEach(x => console.log(x));
+
 function separaIstruzioni(nomeFile){
     let istruzioni = fs.readFileSync(`./testo domande/${nomeFile}.txt`, 'utf-8');
     let movimenti = istruzioni.split('\n');
@@ -72,37 +80,32 @@ function processaIstruzioni(lista) {
             if (x.outputExpression.signalValue != null)
                 return;
             
-
             let valoreInput = null;
             let inputElement = lista.find(y => y.outputExpression.outputWireName === x.inputExpression.base);
-            
             if (inputElement) {
                 valoreInput = inputElement.outputExpression.signalValue;
             }
-            
             if (valoreInput != null) {
                 x.outputExpression.signalValue = valoreInput;
                 return;
             }
-
-            let valoreShiftBits;
-            if (typeof x.inputExpression.shiftBits !== "undefined") {
-                valoreShiftBits = parseInt(x.inputExpression.shiftBits);
-            }
             
             let valoreInputWire1 = null;
             let valoreInputWire1IsNumber = !isNaN(parseInt(x.inputExpression.wire1));
-            
             if (!valoreInputWire1IsNumber) {
                 let foundElement = lista.find(y => y.outputExpression.outputWireName === x.inputExpression.wire1);
                 valoreInputWire1 = foundElement ? foundElement.outputExpression.signalValue : null;
             } else {
                 valoreInputWire1 = parseInt(x.inputExpression.wire1);
             }
-            
             if (valoreInputWire1 == null)
                 return;
 
+            let valoreShiftBits;
+            if (typeof x.inputExpression.shiftBits !== "undefined") {
+                valoreShiftBits = parseInt(x.inputExpression.shiftBits);
+            }
+        
             if (x.inputExpression.bitwiseOperation == "NOT") {
                 x.outputExpression.signalValue = ~valoreInputWire1;
             } else if (!valoreShiftBits) {
@@ -127,6 +130,7 @@ function processaIstruzioni(lista) {
                     case "RSHIFT":
                         x.outputExpression.signalValue = valoreInputWire1 >> valoreShiftBits;
                         break;
+
                     case "LSHIFT":
                         x.outputExpression.signalValue = valoreInputWire1 << valoreShiftBits;
                         break;
@@ -134,20 +138,6 @@ function processaIstruzioni(lista) {
             }
         })
 
-
         segnaliCalcolati = lista.filter(x => x.outputExpression.signalValue != null).length;
     }
 }
-
-// listaStrutturata.forEach(x => {console.log(util.inspect(x, { depth: null, compact: false }))});
-// console.log(`la lunghezza delle istruzioni è ${listaIstruzioni.length} mentre quella strutturata è ${listaStrutturata.length}`);
-
-// listaStrutturata.filter(x => x.inputExpression.base != null).forEach(x => console.log(x));
-
-console.log('Ho cominciato.');
-processaIstruzioni(listaStrutturata);
-console.log('Ho finito.');
-listaStrutturata.filter(x => x.outputExpression.outputWireName == 'a').forEach(x => console.log(x));
-
-// verifico che non ci siano numeri da processare come imput ma solo riferimenti
-// listaStrutturata.filter(x => !isNaN(parseInt(x.inputExpression.wire1))).forEach(x => console.log(x));
