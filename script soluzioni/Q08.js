@@ -3,7 +3,7 @@ const process = require('process');
 const { argv } = process;
 const [, , fileData] = argv;
 
-// node "script soluzioni/Q08.js" 08 debug 
+// node "script soluzioni/Q08.js" 08
 
 const patternNotazioneHexadecimal = /\\x[a-fA-F\d]{2}/g;
 const patternSingleBackslash = /\\\\/g;
