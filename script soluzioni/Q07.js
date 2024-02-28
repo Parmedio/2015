@@ -21,9 +21,7 @@ listaStrutturata.filter(x => x.outputExpression.outputWireName == 'a').forEach(x
 function separaIstruzioni(nomeFile){
     let istruzioni = fs.readFileSync(`./testo domande/${nomeFile}.txt`, 'utf-8');
     let movimenti = istruzioni.split('\n');
-    movimenti.forEach(element => element.replace('\r', ''));
-
-    return movimenti;
+    return movimenti.map(element => element.replace('\r', ''));
 } 
 
 function creaListaStrutturata(lista) {
