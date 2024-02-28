@@ -3,7 +3,7 @@ const process = require('process');
 const { argv } = process;
 const [, , fileData] = argv;
 
-// node "script soluzioni/Q08.js" 08 debug 
+// node "script soluzioni/Q08.js" 08
 
 const patternNotazioneHexadecimal = /\\x[a-fA-F\d]{2}/g;
 const patternSingleBackslash = /\\\\/g;
@@ -21,8 +21,9 @@ const totaleLiterals = listaStringhe.reduce((acc, string) => acc + contaLiterals
 const totaleInMemory = listaStringhe.reduce((acc, string) => acc + contaMemory(string), 0);
 const totaleEncoding = listaStringhe.reduce((acc, string) => acc + contaEncoding(string), 0);
 
-console.log(`\ncaratteri literal ----- ${totaleLiterals}\ncaratteri in memory --- ${totaleInMemory}\ndifferenza ------------ ${totaleLiterals - totaleInMemory}\n`);
-console.log(`\ncaratteri literal ----- ${totaleEncoding}\ncaratteri encoding ---- ${totaleLiterals}\ndifferenza ------------ ${totaleEncoding - totaleLiterals}\n`);
+console.log(`\ncaratteri literal ----- ${totaleLiterals}\ncaratteri in memory --- ${totaleInMemory}\ndifferenza ------------ ${totaleLiterals - totaleInMemory}`);
+console.log(`\ncaratteri encoding ---- ${totaleEncoding}\ncaratteri literal ----- ${totaleLiterals}\ndifferenza ------------ ${totaleEncoding - totaleLiterals}`);
+console.log();
 
 function contaPattern(testo, pattern) {
     let risultati = testo.match(pattern) || [];
