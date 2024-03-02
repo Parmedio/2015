@@ -19,7 +19,6 @@ for (let i = 0; i < orderedRoutes.length; i++) {
 
 console.log(orderedRoutes);
 
-
 function checkCityCounts(obj) { // OK
     let citiesWithOne = 0;
     let citiesWithTwoOrMore = 0;
