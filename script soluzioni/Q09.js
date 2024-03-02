@@ -33,16 +33,34 @@ const [, , fileData] = argv;
 
     //#region ATTEMPT 02
 
-        // parto dal basso
-        // prendo la prima riga di tragitti e la trascrivo in una lista 'tragitti'
-        // aggiungo entrambe le città ad una lista 'città da cercare'
-        // quale è il primo tragitto con una delle città in 'città da cercare'?
-        // quando trovo salvo tragitto in 'tragitti' e aggiungo altra città in 'città da cercare' (attenzione! in riga che trovo devo collegare solo 1 città a meno che non rimangono altre città da cercare perché altrimenti significa che sto chiudendo a cerchio)
+        // let orderedRoutes = orderRoutesByDistance(routes, "asc");
+        // let citiesAlreadyLinked = [];
+        // let citiesToLink = [];
+        // let pickedRoutes = [];
 
-        // 3 liste:
-        // - tutte città
-        // - città già collegate
-        // - città da collegare
+        // orderedRoutes.forEach(route => {
+        //     if (pickedRoutes.length == 0) {
+        //         citiesToLink.push(route.cityDep);
+        //         citiesToLink.push(route.cityArr);
+        //         pickedRoutes.push(route);
+
+        //     } else if (citiesToLink.includes(route.cityDep) && !citiesToLink.includes(route.cityArr) && !citiesAlreadyLinked.includes(route.cityArr)) { 
+        //         citiesToLink.splice(citiesToLink.indexOf(route.cityDep), 1)
+        //         citiesAlreadyLinked.push(route.cityDep)
+        //         citiesToLink.push(route.cityArr);
+        //         pickedRoutes.push(route);
+
+        //     } else if (citiesToLink.includes(route.cityArr) && !citiesToLink.includes(route.cityDep) && !citiesAlreadyLinked.includes(route.cityDep)) { 
+        //         citiesToLink.splice(citiesToLink.indexOf(route.cityArr), 1)
+        //         citiesAlreadyLinked.push(route.cityArr)
+        //         citiesToLink.push(route.cityDep);
+        //         pickedRoutes.push(route);
+        //     }
+        // })
+        
+        // console.log(citiesAlreadyLinked);
+        // console.log(citiesToLink)
+        // console.log(pickedRoutes);
 
     //#endregion
 
@@ -60,8 +78,8 @@ const [, , fileData] = argv;
 
     //#region ATTEMPT 03
 
-        let longhestPathLength = findLonghestPathLength(allPossibleCombination);
-        console.log(longhestPathLength);
+        // let longhestPathLength = findLonghestPathLength(allPossibleCombination);
+        // console.log(longhestPathLength);
 
     //#endregion
 
