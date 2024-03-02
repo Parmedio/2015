@@ -1,11 +1,12 @@
 const puzzle = "3113322113";
-const puzzleTimeToIterate = 40;
+const TimeToIteratept1 = 40;
+const TimeToIteratept2 = 50;
 
 // node "script soluzioni/Q10.js"
 
 console.clear();
-console.log(iterateOverNTimes(describeSequence, 40, puzzle).length);
-console.log(iterateOverNTimes(describeSequence, 50, puzzle).length);
+console.log(iterateOverNTimes(describeSequence, TimeToIteratept1, puzzle).length);
+console.log(iterateOverNTimes(describeSequence, TimeToIteratept2, puzzle).length);
 
 function iterateOverNTimes(functionToExecute, timeToIterate, objectToIterate) {
     let currentState = objectToIterate;
