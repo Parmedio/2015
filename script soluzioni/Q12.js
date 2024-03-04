@@ -82,7 +82,7 @@ function getNumberFromString(stringa) {
 }
 
 function createJson(nomeFile) {
-    let istruzioni = fs.readFileSync(`./testo domande/${nomeFile}.json`, 'utf-8');
+    let istruzioni = fs.readFileSync(`./testo domande/${nomeFile}.txt`, 'utf-8');
     return JSON.parse(istruzioni);
 }
 
