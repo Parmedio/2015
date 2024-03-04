@@ -114,22 +114,21 @@ function findShortestPathLength(listOfCombination) {
 }
 
 function permute(elementList) {
-    const result = [];
+    let result = elementList.map(x => [x]);
+    let currentCumulation = [];
+    const timeToIterate = elementList.length - 1;
 
-    function generate(currentPermutation, remainingArray) {
-        if (remainingArray.length === 0) {
-            result.push(currentPermutation);
-            return;
-        }
+    for (let i = 1; i <= timeToIterate; i++) {
+        result.forEach(element => {
+            elementList.forEach(x => {
+                if (!element.includes(x))
+                    currentCumulation.push([...element, x]);
+            })
+        })
 
-        for (let i = 0; i < remainingArray.length; i++) {
-            const newPermutation = currentPermutation.concat(remainingArray[i]);
-            const newArray = [...remainingArray.slice(0, i), ...remainingArray.slice(i + 1)];
-            generate(newPermutation, newArray);
-        }
+        result = currentCumulation;
+        currentCumulation = [];
     }
-
-    generate([], elementList);
 
     return result;
 }
