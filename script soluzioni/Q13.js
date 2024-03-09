@@ -6,26 +6,13 @@ const [, , fileData] = argv;
 // node "script soluzioni/Q13.js" 13
 
 console.clear();
-let instrunctionList = createInstruction(fileData);
+
+const instrunctionList = createInstruction(fileData);
 const neighborlyHappinessReport = createNeighborlyHappinessReport(instrunctionList);
-
-// #region DEVELOP THEORY
-    const list = ['a', 'b', 'm', 'd', 'p'];
-    const n = list.length;
-    const k = factorial(n)/n;
-    const allShifts = createAllShiftsToRight(list);
-    const allCombinations = createAllCombinations(list);
-    const allSequences = createAllSequences(list);
-    const sliceFirstKElements = allCombinations.slice(0,k);
-    const filterOnlyForFirstElement = allCombinations.filter(x => x[0] == list[0]);
-// #endregion
-
 let allNames = findAllNames(neighborlyHappinessReport);
 
 printMaxHappiness();
-
 allNames.push("Parmedio");
-
 printMaxHappiness();
 
 // #region LOGICS
@@ -93,12 +80,10 @@ printMaxHappiness();
         }));
     }
 
-    function createInstruction(nomeFile) {
-        return fs.readFileSync(`./testo domande/${nomeFile}.txt`, 'utf-8')
+    function createInstruction(fileName) {
+        return fs.readFileSync(`./testo domande/${fileName}.txt`, 'utf-8')
             .split('\n')
-            .map(element => 
-                element.replace('\r', '')
-            );
+            .map(element => element.replace('\r', ''));
     };
 
     function createAllDispositions(nameList) {
@@ -113,26 +98,6 @@ printMaxHappiness();
                         currentCumulation.push([...element, x]);
                 });
             });
-
-            result = currentCumulation;
-            currentCumulation = [];
-        }
-
-        return result;
-    }
-
-    function createAllSequences(elementList) {
-        let result = [elementList[0]];
-        let currentCumulation = [];
-        const timeToIterate = elementList.length - 1;
-
-        for (let i = 1; i <= timeToIterate; i++) {
-            result.forEach(element => {
-                elementList.forEach(x => {
-                    if (!element.includes(x))
-                        currentCumulation.push([...element, x]);
-                })
-            })
 
             result = currentCumulation;
             currentCumulation = [];
@@ -183,5 +148,18 @@ printMaxHappiness();
             return n * factorial(n - 1);
         }
     }
+
+// #endregion
+
+// #region DEVELOP THEORY
+
+    const list = ['a', 'b', 'm', 'd', 'p'];
+    const n = list.length;
+    const k = factorial(n)/n;
+    const allShifts = createAllShiftsToRight(list);
+    const allCombinations = createAllCombinations(list);
+    const allDisposition = createAllDispositions(list);
+    const sliceFirstKElements = allCombinations.slice(0,k);
+    const filterOnlyForFirstElement = allCombinations.filter(x => x[0] == list[0]);
 
 // #endregion
