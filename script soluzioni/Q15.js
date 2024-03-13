@@ -8,16 +8,21 @@ const [, , fileData] = argv;
 console.clear();
 
 const totalDoses = 100;
+const amountOfCalories = 500 
 const instrunctionList = createInstruction(fileData);
 const objectList = createObjectsList(instrunctionList);
 const allPossibleDosesCombination = createAllPossibleDosesCombination(objectList, totalDoses);
-const allPossibleScores = allPossibleDosesCombination.map(x => calcolateScore01(x, objectList));
+const allPossibleRecipes = allPossibleDosesCombination.map(x => assignProperties(x, objectList));
+const allRecipesWithCaloriesConstraint = allPossibleRecipes.filter(x => calculateCalories(x) === amountOfCalories);
+const allPossibleScores = allPossibleRecipes.map(x => calculateScore(x));
+const allScoresWithCaloriesConstraint = allRecipesWithCaloriesConstraint.map(x => calculateScore(x));
 
 console.log(findHighestScore(allPossibleScores));
+console.log(findHighestScore(allScoresWithCaloriesConstraint));
 
 // #region LOGICS
 
-    function findHighestScore (scoresList) {
+    function findHighestScore(scoresList) {
         let maxScore = 0;
 
         scoresList.forEach(x => {
@@ -28,23 +33,16 @@ console.log(findHighestScore(allPossibleScores));
         return maxScore;
     }
 
-    function calcolateScore01(listOfDoses, listOfIngredientsScore) {
-        for (let i = 0; i < listOfDoses.length ; i++) {
-            listOfIngredientsScore[i].Amount = listOfDoses[i];
-        }
+    function calculateScore(listOfIngredientsScore) {
         let totalCapacity = [];
         let totalDurability = [];
         let totalFlavor = [];
         let totalTexture = [];
 
         listOfIngredientsScore.forEach(x => {
-            x.S_Capacity = x.Amount * x.Capacity;
             totalCapacity.push(x.S_Capacity);
-            x.S_Durability = x.Amount * x.Durability;
             totalDurability.push(x.S_Durability);
-            x.S_Flavor = x.Amount * x.Flavor;
             totalFlavor.push(x.S_Flavor);
-            x.S_Texture = x.Amount * x.Texture;
             totalTexture.push(x.S_Texture);
         })
 
@@ -52,8 +50,51 @@ console.log(findHighestScore(allPossibleScores));
         totalDurability = sum(...totalDurability) < 0 ? 0 : sum(...totalDurability);
         totalFlavor = sum(...totalFlavor) < 0 ? 0 : sum(...totalFlavor);
         totalTexture = sum(...totalTexture) < 0 ? 0 : sum(...totalTexture);
-
+        
         return totalCapacity * totalDurability * totalFlavor * totalTexture;
+    }
+
+    function calculateCalories(listOfIngredientsScore){
+        let totalCalories = [];
+
+        listOfIngredientsScore.forEach(x => {
+            totalCalories.push(x.S_Calories);
+        })
+
+        totalCalories = sum(...totalCalories) < 0 ? 0 : sum(...totalCalories);
+
+        return totalCalories;
+    }
+
+    function assignProperties(listOfDoses, listOfIngredientsScore) {
+        let copy = listOfIngredientsScore.map(x => ({
+            Name: x.Name,
+            Amount: 0,
+            Capacity: x.Capacity,
+            Durability: x.Durability,
+            Flavor: x.Flavor,
+            Texture: x.Texture,
+            Calories:x.Calories,
+            S_Capacity: 0,
+            S_Durability: 0,
+            S_Flavor: 0,
+            S_Texture: 0,
+            S_Calories: 0
+        }))
+
+        for (let i = 0; i < listOfDoses.length ; i++) {
+            copy[i].Amount = listOfDoses[i];
+        }
+        
+        copy.forEach(x => {
+            x.S_Capacity = x.Amount * x.Capacity;
+            x.S_Durability = x.Amount * x.Durability;
+            x.S_Flavor = x.Amount * x.Flavor;
+            x.S_Texture = x.Amount * x.Texture;
+            x.S_Calories = x.Amount * x.Calories;
+        })
+
+        return copy;
     }
 
     function createAllPossibleDosesCombination(objList, totalDoses){
