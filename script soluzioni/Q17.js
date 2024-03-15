@@ -3,28 +3,13 @@ const process = require('process');
 const { argv } = process;
 const [, , fileData] = argv;
 
-// node "script soluzioni/Q16.js" 16
+// node "script soluzioni/Q17.js" 17
 
 console.clear();
 
-const tickerTape = {
-    children: 3,
-    cats: 7,
-    samoyeds: 2,
-    pomeranians: 3,
-    akitas: 0,
-    vizslas: 0,
-    goldfish: 5,
-    trees: 3,
-    cars: 2,
-    perfumes: 1
-}
-
 const instrunctionList = createInstruction(fileData);
-const objectList = createObjectsList(instrunctionList);
-let filteredList = objectList.filter(x => confrontObjects(tickerTape, x));
 
-console.log(filteredList[0].aunt);
+console.log(instrunctionList);
 
 // #region LOGICS
 
