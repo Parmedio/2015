@@ -7,58 +7,78 @@ const [, , fileData] = argv;
 
 console.clear();
 
-const instrunctionList = createInstruction(fileData);
+const litersToStore = 150;
+const containersList = createInstruction(17).map(x => parseInt(x));
+const allStorageCombination = calculateAllStorageCombination(containersList, litersToStore);
 
-console.log(instrunctionList);
+console.log (allStorageCombination.length);
+
+const ContainersUsedInAllcombination = allStorageCombination.map(x => Object.keys(x).length)
+const minNumberOfContainer = Math.min(...ContainersUsedInAllcombination);
+
+console.log (ContainersUsedInAllcombination.filter(x => x === minNumberOfContainer).length);
 
 // #region LOGICS
 
-    function confrontObjects(tickerTape, obj) {
-        for (const property in obj) {
-            if (property !== "aunt" && obj[property] !== null) {
-                if (property == "cats" || property == "trees") {
-                    if (obj[property] <= tickerTape[property]) {
-                        return false;
+    function getMaxKeyNumber(obj) {
+        const keys = Object.keys(obj).map(Number);
+        return Math.max(...keys);
+    }
+
+    function createDictionary(numbers) {
+        const dictionary = {};
+        numbers.forEach((num, index) => {
+            dictionary[index] = num;
+        });
+        return dictionary;
+    }
+
+    function sumAllNumbersInDictionary(dict) {
+        let sum = 0;
+        for (const key in dict) {
+            sum += dict[key];
+        }
+        return sum;
+    }
+    
+    function calculateAllStorageCombination(containersList, litersToStore) {
+        console.time('calculateAllStorageCombination');
+        const dictionary = createDictionary(containersList);
+        const containersListLength = containersList.length;
+        let result = [];
+        
+        for (let i = 0; i < containersListLength; i++) {
+            let currentCumulationOfIndexCombination = [{ [i]: dictionary[i] }];
+            let nextCumulationOfIndexCombination = [];
+            
+            for (let k = i + 1; k < containersListLength; k++) {
+
+                currentCumulationOfIndexCombination.forEach(x => {
+                    
+                    for (let key in dictionary) {
+                        let current = { ...x }; 
+                        let parsedKey = parseInt(key);
+                        
+                        if (parsedKey >= getMaxKeyNumber(current) && !(parsedKey in current)) {
+                            current[parsedKey] = dictionary[parsedKey];
+
+                            let sumOfAllNumber = sumAllNumbersInDictionary(current);
+
+                            if (sumOfAllNumber < litersToStore)
+                                nextCumulationOfIndexCombination.push(current);
+
+                            if (sumOfAllNumber == litersToStore)
+                                result.push(current);
+                        }
                     }
-                } else if (property == "pomeranians" || property == "goldfish") {
-                    if (obj[property] >= tickerTape[property]) {
-                        return false;
-                    }
-                } else if (obj[property] !== tickerTape[property]) {
-                    return false;
-                }
+                })
+
+                currentCumulationOfIndexCombination = nextCumulationOfIndexCombination;
+                nextCumulationOfIndexCombination = [];
             }
         }
-        return true;
-    }
-
-    function createObjectsList(stringList) {
-        return stringList.map(x => {
-            let pieces = (x.replace(/:/g, "").replace(",", "").replace("Sue ", "")).split(" ");
-
-            return {
-                aunt:  parseInt(pieces[0]),
-                children: getValue(pieces, "children"), 
-                cats: getValue(pieces, "cats"),
-                samoyeds: getValue(pieces, "samoyeds"),
-                pomeranians: getValue(pieces, "pomeranians"),
-                akitas: getValue(pieces, "akitas"),
-                vizslas: getValue(pieces, "vizslas"),
-                goldfish: getValue(pieces, "goldfish"),
-                trees: getValue(pieces, "trees"),
-                cars: getValue(pieces, "cars"),
-                perfumes: getValue(pieces, "perfumes")
-            }
-        })
-    }
-
-    function getValue(stringList, string) {
-        let index = stringList.indexOf(string);
-        
-        if (index !== -1)
-            return parseInt(stringList[index + 1]);
-    
-        return null;
+        console.timeEnd('calculateAllStorageCombination');
+        return result;
     }
 
     function createInstruction(fileName) {
@@ -68,4 +88,3 @@ console.log(instrunctionList);
     };
 
 // #endregion
-

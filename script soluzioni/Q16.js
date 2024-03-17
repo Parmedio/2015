@@ -23,19 +23,21 @@ const tickerTape = {
 const instrunctionList = createInstruction(fileData);
 const objectList = createObjectsList(instrunctionList);
 let filteredList = objectList.filter(x => confrontObjects(tickerTape, x));
+let filteredListDefective = objectList.filter(x => confrontObjects(tickerTape, x, true));
 
-console.log(filteredList[0].aunt);
+console.log(`first part ${filteredList[0].aunt}.`);
+console.log(`second part ${filteredListDefective[0].aunt}.`);
 
 // #region LOGICS
 
-    function confrontObjects(tickerTape, obj) {
+    function confrontObjects(tickerTape, obj, isDefective = false) {
         for (const property in obj) {
             if (property !== "aunt" && obj[property] !== null) {
-                if (property == "cats" || property == "trees") {
+                if ((property == "cats" || property == "trees") && isDefective) {
                     if (obj[property] <= tickerTape[property]) {
                         return false;
                     }
-                } else if (property == "pomeranians" || property == "goldfish") {
+                } else if ((property == "pomeranians" || property == "goldfish") && isDefective) {
                     if (obj[property] >= tickerTape[property]) {
                         return false;
                     }
