@@ -8,7 +8,7 @@ const [, , fileData] = argv;
 console.clear();
 
 const litersToStore = 150;
-const containersList = createInstruction(17).map(x => parseInt(x));
+const containersList = createInstruction(fileData).map(x => parseInt(x));
 const allStorageCombination = calculateAllStorageCombination(containersList, litersToStore);
 
 console.log (allStorageCombination.length);
