@@ -10,18 +10,21 @@ console.clear();
 const onSymbol = '#';
 const offSymbol = '.';
 const stepsToPerform = 100;
-const containersList = createInstruction(18);
+const containersList = createInstruction(fileData);
 const initialGrid = createInitialGrid(containersList);
 let lastStatus = executeSteps(initialGrid, onSymbol, offSymbol, stepsToPerform);
-let lastStatuslightsStuckOn = executeSteps(initialGrid, onSymbol, offSymbol, stepsToPerform, true);
+let lastStatusLightsStuckOn = executeSteps(initialGrid, onSymbol, offSymbol, stepsToPerform, true);
 
 console.log(countOnStauses(lastStatus.flat(), onSymbol));
-console.log(countOnStauses(setCornerOn(lastStatuslightsStuckOn, onSymbol).flat(), onSymbol));
+console.log(countOnStauses(lastStatusLightsStuckOn.flat(), onSymbol));
 
 // #region LOGICS
 
     function executeSteps(grid, onSymbol, offSymbol, stepsToPerform, lightsStuckOn = false) {
         let nextStep = [];
+
+        if (lightsStuckOn)
+            setCornerOn(grid, onSymbol)
 
         for (let i = 0; i < stepsToPerform; i++) {
             let loopGrid = i == 0 ? grid : nextStep;
@@ -50,10 +53,6 @@ console.log(countOnStauses(setCornerOn(lastStatuslightsStuckOn, onSymbol).flat()
         let gridWidth = grid[0].length;
         let gridHeight = grid.length;
 
-        if (lightsStuckOn) {
-            setCornerOn(grid, onSymbol)
-        }
-
         for (let row = 0; row < gridHeight; row++){
             let newRow = [];
 
@@ -63,6 +62,9 @@ console.log(countOnStauses(setCornerOn(lastStatuslightsStuckOn, onSymbol).flat()
 
             nextGrid.push(newRow);
         }
+
+        if (lightsStuckOn)
+            setCornerOn(nextGrid, onSymbol)
 
         // All of the lights update simultaneously; they all consider the same current state before moving to the next. 
         return nextGrid;
