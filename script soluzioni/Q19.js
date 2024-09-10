@@ -13,55 +13,94 @@ const replacementObjList = createReplacementObjList(instructionList);
 const molecule = instructionList[instructionList.length - 1];
 
 console.log(generateAllMoleculeVariants(molecule, replacementObjList).length);
-console.log(lesDoeIt(startingAtom, molecule, replacementObjList));
-console.log(lesDoeIt(startingAtom, molecule, replacementObjList)[0].steps['1']);
+console.log(getFewestSteps(startingAtom, molecule, replacementObjList));
 
 
 // #region LOGICS
 
-    function lesDoeIt(startingAtom, molecule, replacementObjList){
-        let currentCumulation = [{
-            steps: {},
+    function getFewestSteps(startingAtom, molecule, replacementObjList){
+        let maxMoleculeLength = molecule.length;
+        let nextPhase = [];
+        
+        let currentBraches = [{
+            nSteps: 0,
             moleculeShape: startingAtom
         }];
 
-        let nextPhase = [];
+        let existTargetMolecule = false;
 
-        currentCumulation.forEach(x => {
-            let newBranches = createNewBranches(x, replacementObjList)
-            nextPhase = newBranches;
-        })
+        while (!existTargetMolecule || existOneShorterMolecule(currentBraches, maxMoleculeLength)) {
+            currentBraches.forEach(b => {
+                let newBranches = createNewBranches(b, replacementObjList, maxMoleculeLength);
+
+                newBranches.forEach(b => {
+                    addBranch(nextPhase, b);
+                });
+            });
+
+            currentBraches = nextPhase;
+            nextPhase = [];
+            existTargetMolecule = currentBraches.some(b => b.moleculeShape == molecule);
+            console.clear();
+
+            console.log(currentBraches.length);
+        }
         
-        return nextPhase;
+        return currentBraches.filter(b => b.moleculeShape == molecule)
+            .reduce((min, b) => (min.nSteps < b.nSteps ? min : b));
     }
 
-    function createNewBranches(branch, replacementObjList){
+    function addBranch(targetArray, branch){
+        const existingBranch = targetArray.find(b => b.moleculeShape === branch.moleculeShape);
+    
+        if (!existingBranch) {
+            targetArray.push(branch);
+        } else if (branch.nSteps < existingBranch.nSteps) {
+            existingBranch.nSteps = branch.nSteps;
+        }
+    }
+
+    function existOneShorterMolecule(branches, maxMoleculeLength){
+        return branches.some(b => isShorter(b, maxMoleculeLength));
+    }
+
+    function isShorter(obj, maxMoleculeLength){
+        return obj.moleculeShape.length < maxMoleculeLength;
+    }
+    
+    function createNewBranches(branch, replacementObjList, maxMoleculeLength){
         let newBranches = [];
-        let molecule = branch.moleculeShape;
+        
+        if (branch.moleculeShape.length == maxMoleculeLength) {
+            newBranches.push(branch);    
+        }
 
-        replacementObjList.forEach(replacementObj => {
-            let interventionPoints = getPatternOccurrencesIndexes(molecule, replacementObj);
-            
-            interventionPoints.forEach(index => {
+        var allMoleculeVariants = generateAllMoleculeVariants(branch.moleculeShape, replacementObjList);
+
+        allMoleculeVariants.forEach(molecule => {
+            if (molecule.length <= maxMoleculeLength) {
                 let newBranch = {
-                    steps: {...branch.steps},
-                    moleculeShape: molecule.slice(0, index) +
-                        replacementObj.replacement +
-                        molecule.slice(index + replacementObj.pattern.length)
-                };
-                
-                let nextKey = Object.keys(branch.steps).length === 0 ? 1 : getMaxKeyNumber(branch.steps) + 1;
-
-                newBranch.steps[nextKey] = {
-                    repl: replacementObj,
-                    index: index
+                    nSteps: branch.nSteps + 1,
+                    moleculeShape: molecule
                 };
                 
                 newBranches.push(newBranch);
-            });
+            }
         });
 
-        return newBranches;
+        return filterDuplicateMolecule(newBranches);
+    }
+
+    function filterDuplicateMolecule(branches) {
+        let uniqueBranches = {};
+      
+        branches.forEach(b => {
+          if (!uniqueBranches[b.moleculeShape] || uniqueBranches[b.moleculeShape].nSteps > b.nSteps) {
+            uniqueBranches[b.moleculeShape] = b;
+          }
+        });
+      
+        return Object.values(uniqueBranches);
     }
 
     function generateAllMoleculeVariants(molecule, replacementObjList) {
@@ -72,9 +111,7 @@ console.log(lesDoeIt(startingAtom, molecule, replacementObjList)[0].steps['1']);
             
             interventionPoints.forEach(index => {
                 elaborations.add(
-                    molecule.slice(0, index) +
-                    replacementObj.replacement +
-                    molecule.slice(index + replacementObj.pattern.length)
+                    generateMolecule(molecule, index, replacementObj)
                 );
             });
         })
@@ -82,9 +119,10 @@ console.log(lesDoeIt(startingAtom, molecule, replacementObjList)[0].steps['1']);
         return Array.from(elaborations);
     }
 
-    function getMaxKeyNumber(obj) {
-        const keys = Object.keys(obj).map(Number);
-        return Math.max(...keys);
+    function generateMolecule(molecule, index, replacementObj) {
+        return molecule.slice(0, index) +
+            replacementObj.replacement +
+            molecule.slice(index + replacementObj.pattern.length)
     }
 
     function getPatternOccurrencesIndexes(molecule, replacementObj) {
